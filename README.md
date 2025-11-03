@@ -492,62 +492,6 @@ Build `rpi-play` with the Patched CMakeLists.txt and Dependencies:
 ```bash
 bitbake rpi-play
 ```
----
-
-## Integrate VSOMEIP
-create the following directory structure inside your custom layer:
-```bash
-mkdir -p meta-IVI/recipes-connectivity/vsomeip
-recipetool create -o vsomeip_1.0.bb -B vsomeip_3.5.3 https://github.com/COVESA/vsomeip.git
-```
-Edit `vsomeip_1.0.bb`:
-```bash
-# Recipe created by recipetool
-# This is the basis of a recipe and may need further editing in order to be fully functional.
-# (Feel free to remove these comments when editing.)
-
-# WARNING: the following LICENSE and LIC_FILES_CHKSUM values are best guesses - it is
-# your responsibility to verify that the values are complete and correct.
-#
-# The following license files were not able to be identified and are
-# represented as "Unknown" below, you will need to check them yourself:
-#   LICENSE
-LICENSE = "Unknown"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=9741c346eef56131163e13b9db1241b3"
-
-SRC_URI = "git://github.com/COVESA/vsomeip.git;protocol=https;branch=vsomeip_3.5.3"
-
-# Modify these as desired
-PV = "1.0+git${SRCPV}"
-SRCREV = "429fac5a99c2decefc91ccc5962051ec281b506b"
-
-S = "${WORKDIR}/git"
-
-# NOTE: unable to map the following CMake package dependencies: Doxygen benchmark
-# NOTE: unable to map the following pkg-config dependencies: libsystemd
-# (this is based on recipes that have previously been built and packaged)
-DEPENDS = " boost"
-
-inherit cmake pkgconfig
-
-# Specify any options you want to pass to cmake using EXTRA_OECMAKE:
-EXTRA_OECMAKE = ""
-
-# Ignore do_package_qa
-do_package_qa[noexec]="1"
-do_install:append() {
-    # Remove the unwanted etc directory and its contents
-    rm -rf ${D}${prefix}/etc/vsomeip
-    rmdir --ignore-fail-on-non-empty ${D}${prefix}/etc
-}
-```
-
-Bitbake the Recipe:
-```bash
-bitbake vsomeip
-```
-
----
 
 ## Create the Image Recipe: `ivi-test-image.bb`
 ### Create Directory Structure
